@@ -28,6 +28,25 @@ CORS(app, resources=r'/*')
 def index():
     return jsonify({"code":200})
 
+@app.route('/upload', methods=['POST'], strict_slashes=False)
+def upload():
+    try:
+        img = request.files['image']
+    except:
+        img = None
+
+    try:
+        if img is None:
+            return Response(json.dumps({"code":400, "error":"missing parameter [image]"}),mimetype='application/json')
+        name = str(uuid.uuid1()) + ".jpg"
+        path = "./static/images/" + name
+        img.save(path)
+    except Exception as e:
+        jsonify({"code":200})
+    else:
+        return jsonify({"code":200})
+
+
 if __name__ == "__main__":
     print('''
 ███████╗███████╗███████╗ ██████╗ ██████╗      ██╗███████╗ ██████╗████████╗
